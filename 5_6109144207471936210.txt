@@ -1,0 +1,50 @@
+#include<LiquidCrystal.h>
+LiquidCrystal lcd(13,12,11,10,9,8);
+
+#define sig 2
+
+int val=0;
+
+void setup() 
+{  
+   Serial.begin(9600);
+   lcd.begin(16,2);
+
+   pinMode(sig,INPUT);
+   
+   lcd.setCursor(0,0);
+   lcd.print("BORDER");
+   lcd.setCursor(0,1);
+   lcd.print("CROSSIG IOT");
+   delay(2000);
+   lcd.clear();
+}
+
+void loop() 
+{       
+     
+     if(digitalRead(sig) == HIGH)
+       {
+          val=10;
+          lcd.setCursor(0,0);lcd.print("CROSSING      ");
+          lcd.setCursor(0,1);lcd.print("BORDER........");
+       }
+     else
+       {
+          val=0;
+          lcd.setCursor(0,0);lcd.print("INSIDE        ");
+          lcd.setCursor(0,1);lcd.print("BORDER........");
+       }
+
+   senddata(); 
+   delay(1000); 
+}
+
+void senddata()
+{
+  Serial.print('*');
+
+  if(val <= 9){Serial.print("00");Serial.print(val);}
+  else if(val <= 99){Serial.print("0");Serial.print(val);}
+  else if(val <= 999){Serial.print(val);}
+}

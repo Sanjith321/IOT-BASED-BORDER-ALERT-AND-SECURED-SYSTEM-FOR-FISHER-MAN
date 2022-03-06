@@ -1,0 +1,55 @@
+
+//mail.id : borderiot@protonmail.com
+//Info@2021
+
+#define BLYNK_PRINT Serial    
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+
+// You should get Auth Token in the Blynk App.
+// Go to the Project Settings (nut icon).
+char auth[] = "dYOW9jhPXHLWJFggBWIgXmlHkyin7W_Y";
+
+// Your WiFi credentials.
+// Set password to "" for open networks.
+char ssid[] = "IOT";
+char pass[] = "123456789";
+
+unsigned int m=0,act=0,val,val1,val2,val3;
+
+String inputString = ""; 
+unsigned char a[200];
+
+void setup()
+{
+  Serial.begin(9600);
+  Blynk.begin(auth, ssid, pass);
+    
+}
+
+void loop()
+{
+   while(Serial.available())
+    {
+        char data;
+        data=Serial.read();
+  
+        a[m]=data;
+          if(a[0] == '*')
+          {
+            if(m <= 3)
+            {m++;}
+          }
+      }
+      if(m > 1)
+      {
+        val = (a[1]-0x30)*100 + (a[2]-0x30)*10  + (a[3] - 0x30);
+        m=0;
+      }
+      Blynk.virtualWrite(V0,val);
+      delay(100);
+
+      if(val == 10){Blynk.notify("CROSSING A BORDER....");}
+          
+      Blynk.run();
+}
